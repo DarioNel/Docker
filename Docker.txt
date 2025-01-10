@@ -1,0 +1,56 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Jellyfin
+
+sudo docker run -d --name LANjellyfin -p 80:8096 -v jellyfin-config:/config -v jellyfin-cache:/cache --mount type=bind,source=/path/containers/docker/vol-jellyfin,target=/media --restart=unless-stopped jellyfin/jellyfin 
+
+Postges 
+
+sudo docker run -d --name PostgresSQL -p 5432:5432 -v vol-postgres:/var/lib/postgresql/data/ -e POSTGRES_USER=user -e POSTGRES_PASSWORD=1234 -e POSTGRES_DB=mi-db postgres
+
+Pgadmin
+
+sudo docker run -d --name Pgadmin -p 81:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=1234 elestio/pgadmin
+
+Mariadb
+
+sudo docker run -d --name MariaDB -p 3306:3306 -v vol-mariadb:/var/lib/mysql -e MARIADB_ROOT_PASSWORD=1234 mariadb
+
+Phpmyadmin
+
+sudo docker run -d --name Phpmyadmin -p 82:80 -e PMA_HOST=MariaDB phpmyadmin
+
+Microsoft SQL Server
+
+sudo docker run -d --name MicrosoftSQL -p 1433:1433 -v vol-mssql:/var/opt/mssql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Hola1234#" mcr.microsoft.com/mssql/server:2022-latest
+
+user : sa
+
+----------------------------------------------------------------------------------------------------------------
+
+FROM ubuntu
+
+RUN apt update 
+
+RUN apt upgrade -y
+
+RUN apt install apache2 php -y
+
+RUN apt install libapache2-mod-php php-mysql php-xml php-zip php-gd nano -y
+
+COPY ./vol-my-proyects/ /var/www/html/
+
+RUN chown -R www-data:www-data /var/www/html/
+
+RUN chmod -R 755 /var/www/html/
+
+EXPOSE 80
+
+CMD ["apachectl", "-D", "FOREGROUND"]
+
+
+docker build -t apache-php8 .
+
+----------------------------------------------------------------------------------------------------------------
+docker run -d --name apache-php -p 80:80 -v /path/docker/vol-my-proyects:/var/www/html apache-php8 
+

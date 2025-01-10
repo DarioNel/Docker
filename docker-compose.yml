@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+
+    postgres:
+
+      image: postgres
+      container_name: PostgresSQL
+      ports:
+        - "5432:5432"
+      networks:
+        - mired
+      volumes:
+        - /var/lib/postgresql/data
+      environment:
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: 1234
+        POSTGRES_DB: mi-db
+
+    pgadmin:
+
+      image: elestio/pgadmin
+      container_name: Pgadmin
+      ports:
+        - "81:80"
+      networks:
+        - mired
+      environment:
+        PGADMIN_DEFAULT_EMAIL: admin@admin.com
+        PGADMIN_DEFAULT_PASSWORD: 1234
+
+    mariadb:
+
+      image: mariadb
+      container_name: MariaDb
+      ports:
+        - "3306:3306"
+      volumes:
+        - /var/lib/mysql
+      networks:
+        - mired
+      environment:
+        MARIADB_ROOT_PASSWORD: 1234
+
+    phpmyadmin:
+      
+      image: phpmyadmin
+      container_name: phpmyadmin
+      ports:
+        - "82:80"
+      networks:
+        - mired
+      environment:
+        PMA_HOST: MariaDb
+
+    apache_php8:
+
+      image: apache-php8
+      container_name: WebServer
+      ports:
+        - "80:80"
+      networks:
+        - mired
+      volumes:
+        - /media/Disco/Containers/docker/vol-my-proyects:/var/www/html/    
+
+    SQLserver:
+      
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      container_name: SQLserver
+      ports:
+        - "1433:1433"
+      networks:
+        - mired
+      volumes: 
+        - /var/opt/mssql 
+      environment:
+        ACCEPT_EULA: Y 
+        MSSQL_SA_PASSWORD: Hola1234#  
+
+volumes:
+  vol-postgres:
+  vol-mariadb:
+  vol-mssql:  
+
+networks:
+  mired:
+    driver: bridge
+
+
