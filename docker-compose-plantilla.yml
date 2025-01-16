@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+    service1:
+
+      image: name
+      container_name: name
+      ports:
+        - "80:80"
+      networks:
+        - name_network
+      volumes:
+        - /path/app/container
+      environment:
+        VARIABLE_1: value
+        VARIABLE_2: value
+
+    service2:
+
+      image: name
+      container_name: name
+      ports:
+        - "80:80"
+      networks:
+        - name_network
+      volumes:
+        - /path/my/host:/path/app/container
+      environment:
+        VARIABLE_1: value
+        VARIABLE_2: value    
+       
+volumes:
+  vol-service2:
+  
+networks:
+  name_network:
+    driver: bridge
